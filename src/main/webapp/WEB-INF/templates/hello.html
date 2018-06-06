@@ -3,11 +3,64 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Hello</title>
+    <link rel="stylesheet" th:include="../../static/include/common :: common_css"/>
+    <link rel="stylesheet" th:href="@{/static/css/hello.css(timestamp=${timestamp},cssName=${cssName})}"/>
+    <script type="text/javascript" th:src="@{/static/js/hello.js(timestamp=${timestamp})}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        window.onload = function () {
+            var jsCode = [[${jsCode}]]
+            var list = [[${list}]]
+            console.log('inline jsCode:' + jsCode)
+            console.log('inline list:' + list)
+        }
+    </script>
 </head>
 <body>
     <div th:include="../../static/include/header :: header"></div>
     <h2>修改了</h2>
     <h1>Hello, World!</h1>
     <h1 th:text="${timestamp}"></h1>
+    <input type="text" th:value="${timestamp}"/>
+    <h1 th:text="${ctx}"></h1>
+    <textarea>
+            ${timestamp}
+    </textarea>
+    <hr/>
+    <a th:href="@{/query?name=a_href}">Query</a>
+    <td th:class="${stuStatus!=1}?'stuStatus':'noStatus'" th:text="${stuStatus==1}?'注册':(${stuStatus==0}?'未注册':'休学')"></td>
+    <input type="radio" th:checked="${stuStatus==1}"/>
+    <table>
+        <tbody>
+            <tr th:each="l,lNo:${list}">
+                <td th:text="${'索引'+ lNo + '的值是' + l}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <form action="subscribe.html" th:attr="action=@{/subscribe}">
+        　　<fieldset>
+        　　　　<input type="text" name="email" />
+        　　　　<input type="submit" value="Subscribe me!" th:attr="value=#{submitBtn}"/>
+        　　</fieldset>
+    </form>
+    <img src="../../images/gtvglogo.png" th:attr="src=@{/images/gtvglogo.png},title=#{logo},alt=#{logo}" />
+    <img src="/as.png" th:alt="123s"/>
+    <hr/>
+    <input type="button" value="Do it!" class="btn" th:attrappend="class=${' ' + cssStyle}" />
+    <input type="button" value="Do it!" class="btn" th:attrprepend="class=${cssStyle + ' '}" />
+
+    <input class="row" th:classappend="${active}? 'odd'"/>
+    <input type="checkbox" name="active" th:checked="${active}" />
+
+    <input type="button" value="注册" th:if="${stuStatus==1}"/>
+    <input type="button" value="未注册" th:if="${stuStatus!=1}"/>
+
+    <hr/>
+
+    <div th:switch="${stuStatus}">
+    　　<p th:case="0">未注册</p>
+    　　<p th:case="1">注册</p>
+    　　<p th:case="2">休学</p>
+    </div>
+
 </body>
 </html>
